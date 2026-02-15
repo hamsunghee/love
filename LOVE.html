@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Valentine Event 💘</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#ffe9ef;
+  font-family:sans-serif;
+  overflow:hidden;
+}
+
+.card{
+  background:white;
+  padding:50px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+h1{
+  margin-bottom:30px;
+}
+
+button{
+  padding:12px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  margin:10px;
+  position:relative;
+}
+
+#yes{
+  background:#ff6b81;
+  color:white;
+}
+
+#no{
+  background:#ccc;
+  position:absolute;
+}
+
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>💌 발렌타인데이에 나랑 데이트해줄래?</h1>
+  <button id="yes">YES 💖</button>
+  <button id="no">NO 😈</button>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+
+noBtn.style.top = "60%";
+noBtn.style.left = "55%";
+
+document.addEventListener("mousemove", (e)=>{
+  const rect = noBtn.getBoundingClientRect();
+  const dx = e.clientX - rect.left;
+  const dy = e.clientY - rect.top;
+
+  if(Math.abs(dx)<80 && Math.abs(dy)<80){
+    const x = Math.random()*(window.innerWidth-100);
+    const y = Math.random()*(window.innerHeight-50);
+    noBtn.style.left = x+"px";
+    noBtn.style.top = y+"px";
+  }
+});
+
+// fireworks
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles=[];
+
+yesBtn.addEventListener("click", ()=>{
+  alert("🥰 데이트 확정! 사랑해!");
+  for(let i=0;i<150;i++){
+    particles.push({
+      x:canvas.width/2,
+      y:canvas.height/2,
+      vx:(Math.random()-0.5)*10,
+      vy:(Math.random()-0.5)*10,
+      life:100
+    });
+  }
+  animate();
+});
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx;
+    p.y+=p.vy;
+    p.life--;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,3,0,Math.PI*2);
+    ctx.fillStyle="hotpink";
+    ctx.fill();
+  });
+  particles = particles.filter(p=>p.life>0);
+  if(particles.length>0){
+    requestAnimationFrame(animate);
+  }
+}
+</script>
+
+</body>
+</html>
